@@ -19,6 +19,7 @@ public class King extends Piece {
         checkSouthEast(x, y, state);
         checkSouthWest(x, y, state);
         checkNorthWest(x, y, state);
+        checkKnighs(x,y,state);
 
         return (attackers != null);
     }
@@ -28,6 +29,9 @@ public class King extends Piece {
     }
 
 
+    private void checkKnighs(int x,int y,List<List<Piece>> state){
+        //Write your code below
+    }
     /* if there is enemy queen/ rook on the east side of the same row,
      * add it to the attackers list.
      */
