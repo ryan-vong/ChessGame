@@ -8,19 +8,22 @@ import java.util.List;
  *
  */
 public class Pawn extends Piece{
-	
-	public Pawn(String id)
-	{
-		setId(id);
+
+	public Pawn(String color){
+		super(color);
+		setId((getColor() == 0)? "P" :"p"); //white is uppercase P, black is p.)
 	}
-	
+//	public Pawn(String color, int[] pos, Piece myKing){
+//		super(color, pos, myKing);
+//	}
+
 	@Override
 	public ArrayList<Integer> getValidMoves(List<Piece> state, int pos)
 	{
 		//Pawn can move only one step except the first chance when it may move 2 steps
 		//It can move in a diagonal line only for attacking a piece of opposite color
 		//It cannot move backward or move forward to attack a piece
-		
+		/*
 		validMoves.clear();
 
 		if(getColor()==0) //white
@@ -59,14 +62,13 @@ public class Pawn extends Piece{
 					validMoves.add(pos + N + N);
 				}
 			}
-		}
+		}*/
 
 		return validMoves;
 	}
 
 	@Override
 	public String toString() {
-//		return (getcolor() == 0)? "P" :"p"; //white is uppercase P, black is p.
 		return getId();
 	}
 }
