@@ -15,9 +15,10 @@ public class King extends Piece {
         int y = getPos().getCol();
         checkEast(x, y, state);
         checkWest(x, y, state);
-        List<Piece> northEast = new ArrayList<Piece>;
         checkNorthEast(x, y, state);
+        checkSouthEast(x, y, state);
         checkSouthWest(x, y, state);
+        checkNorthWest(x, y, state);
 
         return (attackers != null);
     }
@@ -57,15 +58,21 @@ public class King extends Piece {
         }
     }
 
-    private void checkMarchingPawn(Piece stopper, int color){
+    private boolean isEnemyPawn(Piece stopper){
         if(stopper != null){
-            if(stopper.getColor())
-        } getColor() == 0)
+            if((getColor() == 0 && stopper.getColor() == 1) ||
+                (getColor() == 1 && stopper.getColor() == 0)) {
+                attackers.add(stopper);
+                return true;
+            }
+        }
+        return false;
     }
+
     private void checkNorthEast(int x, int y, List<List<Piece>> state){
         Piece stopper = state.get(x - 1).get(y + 1); //the first Piece on NE direction;
-        if(stopper != null && getColor() == 0 && isEnemyMarchingPawn(stopper)){ //white king be careful about NW/NE black pawn.
-            attackers.add(stopper);
+        if(isEnemyPawn(stopper)){
+            return;
         }
         Pos stopPos = new Pos(-1, -1);
 
@@ -74,6 +81,8 @@ public class King extends Piece {
                 stopper = state.get(i).get(j);
                 if(stopper != null){
                     stopPos = stopper.getPos();
+                    i = -1;
+                    break;
                 }
             }
         }
@@ -82,49 +91,67 @@ public class King extends Piece {
         }
     }
     private void checkSouthWest(int x, int y, List<List<Piece>> state){
+        Piece stopper = state.get(x - 1).get(y + 1); //the first Piece on NE direction;
+        if(isEnemyPawn(stopper)){
+            return;
+        }
         Pos stopPos = new Pos(-1, -1);
-        Piece stopper = null;
         for(int i = x + 1 ; i <= 7; i++){
             for(int j = y - 1; j >= 0; j--){
                 stopper = state.get(i).get(j);
                 if(stopper != null){
                     stopPos = stopper.getPos();
+                    i = -1;
+                    break;
                 }
             }
         }
         if(stopPos.isValid()){
             addAttacker(stopper, "SW");
         }
-    }
-    private void checkNorthWest(int x, int y, List<List<Piece>> state){
-        Piece stopper = state.get(x - 1).get(y -1); //the first Piece on NW direction;
-        if(getColor() == 0 && isEnemyMarchingPawn(stopper)){ //white king be careful about NW/NE black pawn.
-            attackers.add(stopper);
-        }
-        for(int i = x - 1 ; i >= 0; i--){
-            for(int j = y - 1; j >= 0; j--){
-                stopper = state.get(i).get(j);
+    }//end checkSouthWest
 
-                addAttacker(stopper,"NW");
-                if(isEnemyQueenOrRook(stopper)){
-                    attackers.add(stopper);
+    private void checkSouthEast(int x, int y, List<List<Piece>> state){
+        Piece stopper = state.get(x + 1).get(y + 1); //the first Piece on SE direction;
+        if(isEnemyPawn(stopper)){
+            return;
+        }
+        Pos stopPos = new Pos(-1, -1);
+        for(int i = x + 1 ; i <= 7; i++){
+            for(int j = y + 1; j <= 7; j++){
+                stopper = state.get(i).get(j);
+                if(stopper != null){
+                    stopPos = stopper.getPos();
+                    i = -1;
+                    break;
                 }
             }
         }
-    }
-
-    private void addAttacker(List<Piece> row, int stopCol){
-        Piece stopper = row.get(stopCol);
-        if(stopper.getColor() != getColor()&& "QR".equalsIgnoreCase(stopper.toString())) {
-                attackers.add(stopper);
+        if(stopPos.isValid()){
+            addAttacker(stopper, "SE");
         }
-    }
-    private boolean isEnemyQueenOrRook(Piece stopper){
-        return (stopper.getColor() != getColor()&& "QR".equalsIgnoreCase(stopper.toString()));
-    }
-    private boolean isEnemyMarchingPawn(Piece stopper){
-        return (stopper.getColor() != getColor()&& "P".equalsIgnoreCase(stopper.toString()));
-    }
+    }//end checkSouthEast
+
+    private void checkNorthWest(int x, int y, List<List<Piece>> state){
+        Piece stopper = state.get(x - 1).get(y -1); //the first Piece on NW direction;
+        if(isEnemyPawn(stopper)){
+            return;
+        }
+        Pos stopPos = new Pos(-1, -1);
+        for(int i = x - 1 ; i >= 0; i--){
+            for(int j = y - 1; j >= 0; j--){
+                stopper = state.get(i).get(j);
+                if(stopper != null){
+                    stopPos = stopper.getPos();
+                    i = -1;
+                    break;
+                }
+            }
+        }
+        if(stopPos.isValid()){
+            addAttacker(stopper, "NW");
+        }
+    }//end checkNorthWest
 
     /**
      * Check if the stopper piece is potential attacker. If so, add to the attackers list.
@@ -133,12 +160,12 @@ public class King extends Piece {
      */
     private void addAttacker(Piece stopper, String direct){
 //        stopper = row.get(stopCol);
-        if(stopper.getColor() != getColor(){
+        if(stopper.getColor() != getColor()){ //if stopper is not enemy, then do nothing.
             switch (direct) {
                 //on direction of east/west, attackers are enemy queen and rook.
                 case "E":
                 case "W":
-                    if ("QR".equalsIgnoreCase(stopper.toString())) {
+                    if ("QR".indexOf(stopper.toString().charAt(0)) >=0) {
                         attackers.add(stopper);
                     }
                     break;
@@ -147,14 +174,14 @@ public class King extends Piece {
                 case "NE":
                 case "SW":
                 case "SE":
-                    if ("QB".equalsIgnoreCase(stopper.toString())) {
+                    if ("QB".indexOf(stopper.toString().charAt(0)) >=0) {
                         attackers.add(stopper);
                     }
                     break;
 
             }//end switch
         } //end if
+    }//addAttacker
 
 
-    }
 }

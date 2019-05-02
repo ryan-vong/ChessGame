@@ -51,6 +51,7 @@ public abstract class Piece {
 			this.color = 1;
 		}
 	}
+
 	public int getColor() {
 		return color;
 	}
