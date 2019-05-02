@@ -11,8 +11,7 @@ import java.util.List;
  * It implements Cloneable interface as a copy of the piece is required very often
  */
 public abstract class Piece {
-
-	private int color;
+	
 	private String id = null; //prnbqk are black pieces and PRNBQK are white pieces
 
 	protected final int N = -10, S = 10, E = 1, W = -1;
@@ -26,19 +25,13 @@ public abstract class Piece {
 		this.id=id;
 	}
 	
-	public void setColor(int c)
-	{
-		this.color=c;
-	}
-	
 	public String getId()
 	{
 		return id;
 	}
 	
-	public int getcolor()
-	{
-		return this.color;
+	public int getColor() {
+		return (("PRNBQK".indexOf(id) >= 0)? 0:1); //
 	}
 
 }

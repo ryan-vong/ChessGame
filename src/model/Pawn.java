@@ -9,10 +9,9 @@ import java.util.List;
  */
 public class Pawn extends Piece{
 	
-	public Pawn(String i,int c)
+	public Pawn(String id)
 	{
-		setId(i);
-		setColor(c);
+		setId(id);
 	}
 	
 	@Override
@@ -24,15 +23,15 @@ public class Pawn extends Piece{
 		
 		validMoves.clear();
 
-		if(getcolor()==0) //white
+		if(getColor()==0) //white
 		{
 			if (state.get(pos + N) == null) { //move one step upward.
 				validMoves.add(pos + N);
 			}
-			if (state.get(pos + N + E)!= null && state.get(pos + N + E).getcolor() != getcolor()) { //capture the northeast
+			if (state.get(pos + N + E)!= null && state.get(pos + N + E).getColor() != getColor()) { //capture the northeast
 				validMoves.add(pos + N + E);
 			}
-			if (state.get(pos + N + W)!=null && state.get(pos + N + W).getcolor() != getcolor()) { //capture the northwest
+			if (state.get(pos + N + W)!=null && state.get(pos + N + W).getColor() != getColor()) { //capture the northwest
 				validMoves.add(pos + N + W);
 			}
 			if (pos % 60 >= 1 && pos % 60 <= 8)//first move, P on pos 61-68
@@ -43,15 +42,15 @@ public class Pawn extends Piece{
 			}
 		}
 
-		if(getcolor()==1) //white
+		if(getColor()==1) //black
 		{
 			if (state.get(pos + S) == null) { //move one step upward.
 				validMoves.add(pos + S);
 			}
-			if (state.get(pos + S + E)!=null && state.get(pos + S + E).getcolor() != getcolor()) { //capture the northeast
+			if (state.get(pos + S + E)!=null && state.get(pos + S + E).getColor() != getColor()) { //capture the northeast
 				validMoves.add(pos + S + E);
 			}
-			if (state.get(pos + S + W)!=null && state.get(pos + S + W).getcolor() != getcolor()) { //capture the northwest
+			if (state.get(pos + S + W)!=null && state.get(pos + S + W).getColor() != getColor()) { //capture the northwest
 				validMoves.add(pos + S + W);
 			}
 			if (pos % 10 >= 1 && pos % 10 <= 8)//first move which p on pos 11-18.
